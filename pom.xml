@@ -6,7 +6,7 @@
 
     <groupId>ml.empee</groupId>
     <artifactId>AbstractParent</artifactId>
-    <version>1.1</version>
+    <version>1.2</version>
     <packaging>pom</packaging>
 
     <properties>
@@ -17,6 +17,7 @@
 
         <plugin.api>1.13</plugin.api>
         <server.version>1.19.3-R0.1-SNAPSHOT</server.version>
+        <plugin.output-dir>${env.MINECRAFT_SERVER}\1.19.3\plugins</plugin.output-dir>
     </properties>
 
     <repositories>
@@ -88,75 +89,6 @@
                     </compilerArgs>
                 </configuration>
             </plugin>
-
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-shade-plugin</artifactId>
-                <version>3.3.0</version>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>shade</goal>
-                        </goals>
-                        <configuration>
-                            <createDependencyReducedPom>false</createDependencyReducedPom>
-                            <artifactSet>
-                                <excludes>
-                                    <exclude>org.intellij.lang:annotations</exclude>
-                                    <exclude>org.jetbrains:annotations</exclude>
-                                </excludes>
-                            </artifactSet>
-                            <filters>
-                                <filter>
-                                    <artifact>*:*</artifact>
-                                    <excludes>
-                                        <exclude>META-INF/**</exclude>
-                                    </excludes>
-                                </filter>
-                            </filters>
-                            <relocations>
-                                <relocation>
-                                    <pattern>ml.empee.commandsManager</pattern>
-                                    <shadedPattern>${project.groupId}.${project.artifactId}.relocations.commandsManager</shadedPattern>
-                                </relocation>
-                                <relocation>
-                                    <pattern>ml.empee.configurator</pattern>
-                                    <shadedPattern>${project.groupId}.${project.artifactId}.relocations.configurator</shadedPattern>
-                                </relocation>
-                                <relocation>
-                                    <pattern>ml.empee.notifier</pattern>
-                                    <shadedPattern>${project.groupId}.${project.artifactId}.relocations.notifier</shadedPattern>
-                                </relocation>
-                                <relocation>
-                                    <pattern>ml.empee.ioc</pattern>
-                                    <shadedPattern>${project.groupId}.${project.artifactId}.relocations.ioc</shadedPattern>
-                                </relocation>
-                                <relocation>
-                                    <pattern>ml.empee.json</pattern>
-                                    <shadedPattern>${project.groupId}.${project.artifactId}.relocations.json</shadedPattern>
-                                </relocation>
-                                <relocation>
-                                    <pattern>com.mongodb</pattern>
-                                    <shadedPattern>${project.groupId}.${project.artifactId}.relocations.mongodb</shadedPattern>
-                                </relocation>
-                                <relocation>
-                                    <pattern>org.bson</pattern>
-                                    <shadedPattern>${project.groupId}.${project.artifactId}.relocations.bson</shadedPattern>
-                                </relocation>
-                                <relocation>
-                                    <pattern>ml.empee.itemBuilder</pattern>
-                                    <shadedPattern>${project.groupId}.${project.artifactId}.relocations.itemBuilder</shadedPattern>
-                                </relocation>
-                                <relocation>
-                                    <pattern>io.github.rysefoxx.inventory</pattern>
-                                    <shadedPattern>${project.groupId}.${project.artifactId}.relocations.rysefoxxInventory</shadedPattern>
-                                </relocation>
-                            </relocations>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
         </plugins>
 
         <pluginManagement>
@@ -196,6 +128,63 @@
                                     <dependency>io.papermc.paper:paper-server:${server.version}:jar</dependency>
                                     <dependency>org.spigotmc:spigot:${server.version}:jar</dependency>
                                 </remappedDependencies>
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-shade-plugin</artifactId>
+                    <version>3.3.0</version>
+                    <executions>
+                        <execution>
+                            <phase>package</phase>
+                            <goals>
+                                <goal>shade</goal>
+                            </goals>
+                            <configuration>
+                                <outputFile>${plugin.output-dir}/${project.build.finalName}.jar</outputFile>
+                                <createDependencyReducedPom>false</createDependencyReducedPom>
+                                <filters>
+                                    <filter>
+                                        <artifact>*:*</artifact>
+                                        <excludes>
+                                            <exclude>org/intellij/lang/annotations/**</exclude>
+                                            <exclude>org/jetbrains/annotations/**</exclude>
+                                            <exclude>META-INF/**</exclude>
+                                        </excludes>
+                                    </filter>
+                                </filters>
+                                <relocations>
+                                    <relocation>
+                                        <pattern>ml.empee.commandsManager</pattern>
+                                        <shadedPattern>${project.groupId}.${project.artifactId}.relocations.commandsManager</shadedPattern>
+                                    </relocation>
+                                    <relocation>
+                                        <pattern>ml.empee.configurator</pattern>
+                                        <shadedPattern>${project.groupId}.${project.artifactId}.relocations.configurator</shadedPattern>
+                                    </relocation>
+                                    <relocation>
+                                        <pattern>ml.empee.notifier</pattern>
+                                        <shadedPattern>${project.groupId}.${project.artifactId}.relocations.notifier</shadedPattern>
+                                    </relocation>
+                                    <relocation>
+                                        <pattern>ml.empee.ioc</pattern>
+                                        <shadedPattern>${project.groupId}.${project.artifactId}.relocations.ioc</shadedPattern>
+                                    </relocation>
+                                    <relocation>
+                                        <pattern>ml.empee.json</pattern>
+                                        <shadedPattern>${project.groupId}.${project.artifactId}.relocations.json</shadedPattern>
+                                    </relocation>
+                                    <relocation>
+                                        <pattern>ml.empee.itembuilder</pattern>
+                                        <shadedPattern>${project.groupId}.${project.artifactId}.relocations.itemBuilder</shadedPattern>
+                                    </relocation>
+                                    <relocation>
+                                        <pattern>io.github.rysefoxx.inventory</pattern>
+                                        <shadedPattern>${project.groupId}.${project.artifactId}.relocations.rysefoxxInventory</shadedPattern>
+                                    </relocation>
+                                </relocations>
                             </configuration>
                         </execution>
                     </executions>
